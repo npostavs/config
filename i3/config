@@ -1,0 +1,122 @@
+# This configuration uses Mod4 and Mod4. Make sure they are mapped properly using xev(1)
+# and xmodmap(1). Usually, Mod4 is Alt (Alt_L) and Mod4 is Windows (Super_L)
+
+set $mod Mod4
+set $sock ~/.config/i3/ipc.sock
+
+# ISO 10646 = Unicode
+font -misc-fixed-medium-r-normal--13-120-75-75-C-70-iso10646-1
+
+# Use Mouse+$mod to drag floating windows to their wanted position
+floating_modifier $mod
+
+###########
+bindsym XF86MonBrightnessDown exec sudo backlight down
+bindsym XF86MonBrightnessUp exec sudo backlight up
+bindsym XF86Launch1 exec i3-input -s $sock -p 'exec sudo backlight ' -P 'backlight {up|down|set <val>|get|toggle}: ' > /dev/null
+bindsym Print exec i3-input -s $sock -p 'exec scrot ' -P 'Filename: ' > /dev/null
+###########
+
+# Fullscreen ($mod+f)
+bindsym $mod+f fullscreen
+bindsym $mod+Shift+f fullscreen global
+
+## tiling method
+# Stacking ($mod+Shift+s)
+bindsym $mod+Shift+s layout stacking
+
+# Tabbed ($mod+Shift+t)
+bindsym $mod+Shift+t layout tabbed
+
+# Default ($mod+Shift+d)
+bindsym $mod+Shift+d layout default
+
+
+# Toggle tiling/floating of the current window ($mod+Shift+space)
+bindsym $mod+Shift+space floating toggle
+
+# Go into the tiling layer / floating layer, depending on whether
+# the current window is tiling / floating ($mod+space)
+bindsym $mod+space focus mode_toggle
+
+# focus the parent container
+bindsym $mod+a focus parent
+
+# (alternatively, you can use the cursor keys:)
+bindsym $mod+Left focus left
+bindsym $mod+Down focus down
+bindsym $mod+Up focus up
+bindsym $mod+Right focus right
+
+bindsym $mod+Tab border toggle
+
+bindsym $mod+h split h
+bindsym $mod+v split v
+
+# Snap ($mod+Control+DIR)
+bindsym $mod+Control+Left layout stacking
+bindsym $mod+Control+Down layout stacking
+bindsym $mod+Control+Up layout stacking
+bindsym $mod+Control+Right layout stacking
+
+# Move ($mod+Shift+DIR)
+bindsym $mod+Shift+Left move left
+bindsym $mod+Shift+Down move down
+bindsym $mod+Shift+Up move up
+bindsym $mod+Shift+Right move right
+
+# Move Container ($mod+Shift+j/k/l/;)
+bindcode $mod+Shift+44 focus parent; move left
+bindcode $mod+Shift+45 focus parent; move down
+bindcode $mod+Shift+46 focus parent; move up
+bindcode $mod+Shift+47 focus parent; move right
+
+# Workspaces ($mod+1/2/…)
+bindcode $mod+10 workspace 1
+bindcode $mod+11 workspace 2
+bindcode $mod+12 workspace 3
+bindcode $mod+13 workspace 4
+bindcode $mod+14 workspace 5
+bindcode $mod+15 workspace 6
+bindcode $mod+16 workspace 7
+bindcode $mod+17 workspace 8
+bindcode $mod+18 workspace 9
+bindcode $mod+19 workspace 10
+
+# Move to Workspaces
+bindcode $mod+Shift+10 move workspace 1
+bindcode $mod+Shift+11 move workspace 2
+bindcode $mod+Shift+12 move workspace 3
+bindcode $mod+Shift+13 move workspace 4
+bindcode $mod+Shift+14 move workspace 5
+bindcode $mod+Shift+15 move workspace 6
+bindcode $mod+Shift+16 move workspace 7
+bindcode $mod+Shift+17 move workspace 8
+bindcode $mod+Shift+18 move workspace 9
+bindcode $mod+Shift+19 move workspace 10
+
+# $mod+Return starts a new terminal
+bindsym $mod+Return exec /usr/bin/x-terminal-emulator
+
+# $mod+BackSpace kills the current client
+bindsym $mod+BackSpace kill
+
+# $mod+r starts dmenu and launches the selected application
+bindsym $mod+r exec /usr/bin/dmenu_run
+
+# $mod+Shift+q quit i3
+bindsym $mod+Shift+q exit
+
+# $mod+Ctrl+Shift+r restarts i3 inplace
+bindsym $mod+Ctrl+Shift+r restart
+bindsym $mod+Shift+r reload
+
+# The IPC interface allows programs like an external workspace bar
+# (i3-wsbar) or i3-msg (can be used to "remote-control" i3) to work.
+ipc-socket $sock
+
+exec lua ~/bin/stat.lua | dzen2 -dock
+
+# XXX: Automatically added a call to i3bar to provide a workspace bar
+#exec i3status | i3bar -d
+workspace_bar output
