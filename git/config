@@ -1,0 +1,20 @@
+[color]
+	ui = auto
+[user]
+	email = npostavs@users.sourceforge.net
+	name = Noam Postavsky\n
+	signingkey = npostavs
+[alias]
+	co = checkout
+	ci = commit
+	graph = log --oneline --graph --decorate
+[push]
+	default = simple
+[rerere]
+	enabled = true
+[gc]
+	# default is 60 days, but better not to throw out human work too
+	# quickly
+	rerereresolved = 1 year
+[diff]
+	mnemonicprefix = true
