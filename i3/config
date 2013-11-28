@@ -138,3 +138,5 @@ bar {
 
 # the workspace bar will cover the status bar
 exec --no-startup-id lua ~/.config/i3/stat.lua | dzen2 -dock
+
+for_window [title="^floatme$"] floating enable
