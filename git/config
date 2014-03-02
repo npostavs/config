@@ -1,3 +1,5 @@
+[core]
+	attributesfile = "~/.config/git/attributes"
 [color]
 	ui = auto
 [user]
@@ -18,3 +20,6 @@
 	rerereresolved = 1 year
 [diff]
 	mnemonicprefix = true
+[diff "lisp"]
+	# lisp diff headers should lines starting with parens
+	xfuncname = "^\\(.*$"
