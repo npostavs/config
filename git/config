@@ -10,6 +10,8 @@
 	co = checkout
 	ci = commit
 	graph = log --oneline --graph --decorate
+	hub = !~/.config/git/github-fetch.sh
+	pr = !~/.config/git/pr.sh
 [push]
 	default = simple
 [rerere]
