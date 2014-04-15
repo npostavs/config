@@ -16,6 +16,8 @@
 	default = simple
 [rerere]
 	enabled = true
+[merge]
+	conflictstyle = diff3
 [gc]
 	# default is 60 days, but better not to throw out human work too
 	# quickly
