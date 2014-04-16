@@ -18,6 +18,7 @@
 	enabled = true
 [merge]
 	conflictstyle = diff3
+	branchdesc = true
 [gc]
 	# default is 60 days, but better not to throw out human work too
 	# quickly
