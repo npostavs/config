@@ -1,7 +1,10 @@
 #!/bin/sh
 
-# $1 = <user>:<branch> -- copied from top line of pull request
-#    | https://github.com/<user>/<repo>/tree/<branch> -- web url
+if [ $# -ne 1 ] ; then
+    echo "Usage: <user>:<branch> -- copied from top line of pull request" >&2
+    echo "     | https://github.com/<user>/<repo>/tree/<branch> -- web url" >&2
+    exit 1
+fi
 
 IFS=:
 set -- $1
