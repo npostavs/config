@@ -1,0 +1,4 @@
+language: emacs-lisp
+before_install:
+  - cat $(which add-apt-repository)
+script: true
