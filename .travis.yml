@@ -1,4 +1,4 @@
 language: emacs-lisp
-before_install:
-  - cat $(which add-apt-repository)
-script: true
+script:
+  - echo "$TRAVIS_BRANCH, $TRAVIS_COMMIT, $TRAVIS_COMMIT_RANGE"
+  - git diff "$TRAVIS_COMMIT_RANGE"
