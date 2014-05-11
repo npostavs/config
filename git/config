@@ -28,3 +28,6 @@
 [diff "lisp"]
 	# lisp diff headers should lines starting with parens
 	xfuncname = "^\\(.*$"
+[diff "org"]
+	# org headers start with stars
+	xfuncname = "^ *[*]+.*$"
