@@ -22,12 +22,17 @@
 [gc]
 	# default is 60 days, but better not to throw out human work too
 	# quickly
-	rerereresolved = 1 year
+	rerereresolved = 365
 [diff]
 	mnemonicprefix = true
 [diff "lisp"]
 	# lisp diff headers should lines starting with parens
 	xfuncname = "^\\(.*$"
+[diff "c"]
+	# static void func(args)
+	# func (args) // return on previous line
+	# DEFUN ("func", ...) // Emacs macro
+	xfuncname = "^(([a-zA-Z0-9_]+ ?){1,2}[()].*)"
 [diff "org"]
 	# org headers start with stars
 	xfuncname = "^ *[*]+.*$"
