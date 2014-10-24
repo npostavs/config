@@ -1,5 +1,9 @@
 [core]
 	attributesfile = "~/.config/git/attributes"
+	# the suggested default for Windows is true, but that is for
+	# people who don't know to check their diffs before committing I
+	# guess.
+	autocrlf = false
 [color]
 	ui = auto
 [user]
