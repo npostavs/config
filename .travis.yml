@@ -1,4 +1,18 @@
-language: emacs-lisp
+language: generic
+branches:
+  only:
+    - master
+
+# what if we just exit early?
+install:
+  - true ${TRAVIS_COMMIT_RANGE:=$TRAVIS_BRANCH..FETCH_HEAD}
+  - export TRAVIS_COMMIT_RANGE
+  - echo $TRAVIS_COMMIT_RANGE
+  - xx=bar
+  - exit 0
 script:
+  - echo $xx
   - echo "$TRAVIS_BRANCH, $TRAVIS_COMMIT, $TRAVIS_COMMIT_RANGE"
+  - echo "$BASH_VERSION"
+  - exit 0
   - git diff "$TRAVIS_COMMIT_RANGE"
