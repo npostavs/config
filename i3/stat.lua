@@ -41,7 +41,12 @@ local function memstats(meminfo)
    end
    local free = stats.MemFree + stats.Buffers + stats.Cached
    local usage = 1 - free / stats.MemTotal
-   local swap_usage = 1 - stats.SwapFree / stats.SwapTotal
+   local swap_usage
+   if stats.SwapTotal > 0 then
+      swap_usage = 1 - stats.SwapFree / stats.SwapTotal
+   else
+      swap_usage = 0
+   end
    return { usage = usage, swap_usage = swap_usage }
 end
 
