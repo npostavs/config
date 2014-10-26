@@ -3,15 +3,6 @@ branches:
   only:
     - master
 install:
-  - echo ${TRAVIS_COMMIT_RANGE:=$TRAVIS_BRANCH..FETCH_HEAD}
-  - echo 'deb http://ppa.launchpad.net/cassou/emacs/ubuntu precise main' | sudo tee /etc/sources.list > /dev/null
-  - sudo apt-get update
-  - sudo apt-get install emacs-snapshot-nox
-  - emacs --version
-  - emacs-snapshot --version
+  - git rev-parse ${TRAVIS_COMMIT_RANGE:=$TRAVIS_BRANCH..FETCH_HEAD}
 script:
-  - echo $xx
-  - echo "$TRAVIS_BRANCH, $TRAVIS_COMMIT, $TRAVIS_COMMIT_RANGE"
-  - echo "$BASH_VERSION"
-  - exit 0
-  - git diff "$TRAVIS_COMMIT_RANGE"
+  - type travis_fold travis_cmd travis_nanoseconds travis_result
