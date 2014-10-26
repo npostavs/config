@@ -5,4 +5,5 @@ branches:
 install:
   - git rev-parse ${TRAVIS_COMMIT_RANGE:=$TRAVIS_BRANCH..FETCH_HEAD}
 script:
-  - type travis_fold travis_cmd travis_nanoseconds travis_result
+  - source funs.sh
+  - say-something
