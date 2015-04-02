@@ -11,7 +11,7 @@ case "$1" in
 esac
 shift
 
-prnums=("$@")
+prnums=($(eval "echo $*"))
 
 refspecs=()
 for prnum in "${prnums[@]}" ; do
