@@ -1,8 +1,10 @@
 language: generic
+git:
+  - echo "$TRAVIS_JOB_NUMBER" && false # fail early...
 install:
   - sudo mkdir /usr/local/evm && sudo chown "$USER:" /usr/local/evm
   - git clone -b master --depth=1 https://github.com/rejeep/evm.git .evm &> /dev/null
-  - export PATH="$PWD/evm-master/bin:$PATH"
+  - export PATH="$PWD/.evm/bin:$PATH"
 script:
   - evm list
 
