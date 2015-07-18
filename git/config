@@ -12,8 +12,6 @@
 	co = checkout
 	ci = commit
 	graph = log --oneline --graph --decorate
-	hub = !~/.config/git/github-fetch.sh
-	pr = !~/.config/git/pr.sh
 	mkpatch = difftool --no-prompt --extcmd 'diff -u --label old/$BASE --label new/$BASE'
 [push]
 	default = simple
