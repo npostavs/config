@@ -1,9 +1,7 @@
 [core]
 	attributesfile = "~/.config/git/attributes"
-	# the suggested default for Windows is true, but that is for
-	# people who don't know to check their diffs before committing I
-	# guess.
-	autocrlf = false
+	# Drop CRs before committing, probably a good default most of the time.
+	autocrlf = input
 [color]
 	ui = auto
 [user]
