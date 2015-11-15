@@ -26,12 +26,14 @@
 	rerereresolved = 365
 [diff]
 	mnemonicprefix = true
+# lisp diff headers should be lines starting with parens
 [diff "lisp"]
-	# lisp diff headers should lines starting with parens
+	xfuncname = "^\\(.*$"
+[diff "elisp"]
 	xfuncname = "^\\(.*$"
 [diff "c"]
 	# static void func(args)
-	# func (args) // return on previous line
+	# func (args) // return type on previous line
 	# DEFUN ("func", ...) // Emacs macro
 	xfuncname = "^(([a-zA-Z0-9_]+ ?){1,2}[()].*)"
 [diff "org"]
