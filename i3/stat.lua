@@ -50,37 +50,15 @@ local function memstats(meminfo)
    return { usage = usage, swap_usage = swap_usage }
 end
 
-local batt_total, BATTERY
-local measure_type -- energy or charge (or voltage?)
+local BATTERY
 local POWER_SUPPLY = '/sys/class/power_supply/'
 for batt in ox.files(POWER_SUPPLY)
 do
    if string.find(batt, '^BAT') then
       BATTERY = POWER_SUPPLY .. batt .. '/'
-      for full in ox.files(BATTERY)
-      do
-         measure_type = string.match(full, '^([^_]*)_full')
-         if measure_type then
-            local battinfo = io.open(BATTERY .. full)
-            batt_total = tonumber(battinfo:read())
-            battinfo:close()
-            break
-         end
-      end
+      break
    end
 end
-
-
-local function battstat(battinfo)
-   info = battinfo:read()
-
-   if info then
-      return tonumber(info) / batt_total
-   else
-      return nil
-   end
-end
-
 
 --------------------------------------
 ---- meter drawing functions
@@ -115,6 +93,7 @@ end
 
 local stat = open_special('/proc/stat')
 local meminfo = open_special('/proc/meminfo')
+local batt_pct = open_special(BATTERY .. 'capacity')
 
 while true do
 
@@ -126,15 +105,8 @@ while true do
    meminfo:seek('set')
    local mstats = memstats(meminfo)
 
-   local batt = nil
-   if battinfo then
-      battinfo:seek('set')
-      batt = battstat(battinfo)
-   end
-   if not batt then
-      battinfo = open_special(BATTERY .. measure_type .. '_now')
-      batt = 0
-   end
+   batt_pct:seek('set')
+   local batt = tonumber(batt_pct:read())
 
    -- io.write(string.format('%d%%batt, ', batt *100))
    -- io.write(string.format('%d%%mem, %d%%swap, ',
