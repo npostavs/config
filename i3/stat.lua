@@ -50,12 +50,24 @@ local function memstats(meminfo)
    return { usage = usage, swap_usage = swap_usage }
 end
 
-local batt_total
-local BATTERY = '/sys/class/power_supply/BAT1'
+local batt_total, BATTERY
+local measure_type -- energy or charge (or voltage?)
+local POWER_SUPPLY = '/sys/class/power_supply/'
+for batt in ox.files(POWER_SUPPLY)
 do
-   local battinfo = io.open(BATTERY .. '/charge_full')
-   batt_total = tonumber(battinfo:read())
-   battinfo:close()
+   if string.find(batt, '^BAT') then
+      BATTERY = POWER_SUPPLY .. batt .. '/'
+      for full in ox.files(BATTERY)
+      do
+         measure_type = string.match(full, '^([^_]*)_full')
+         if measure_type then
+            local battinfo = io.open(BATTERY .. full)
+            batt_total = tonumber(battinfo:read())
+            battinfo:close()
+            break
+         end
+      end
+   end
 end
 
 
@@ -75,7 +87,7 @@ end
 --------------------------------------
 
 local W = 6
-local H = 15
+local H = 18
 local function dzen_graph(colour, percent)
    local h = math.floor(H*percent + 0.5)
    if percent > 0 and h < H then h = h + 1 end
@@ -101,7 +113,6 @@ local function open_special(filename)
    return file
 end
 
-local battinfo = open_special(BATTERY .. '/charge_now')
 local stat = open_special('/proc/stat')
 local meminfo = open_special('/proc/meminfo')
 
@@ -121,7 +132,7 @@ while true do
       batt = battstat(battinfo)
    end
    if not batt then
-      battinfo = open_special(BATTERY .. '/charge_now')
+      battinfo = open_special(BATTERY .. measure_type .. '_now')
       batt = 0
    end
 
