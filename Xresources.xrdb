@@ -1,2 +1,5 @@
-Rxvt.intensityStyles: false
 #include "xresources/Xresources.light"
+
+Rxvt.intensityStyles: false
+
+dzen2.background: S_base2
