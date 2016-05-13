@@ -106,7 +106,7 @@ while true do
    local mstats = memstats(meminfo)
 
    batt_pct:seek('set')
-   local batt = tonumber(batt_pct:read())
+   local batt = tonumber(batt_pct:read()) / 100
 
    -- io.write(string.format('%d%%batt, ', batt *100))
    -- io.write(string.format('%d%%mem, %d%%swap, ',
