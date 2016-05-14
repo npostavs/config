@@ -25,9 +25,8 @@ font -misc-fixed-medium-r-normal--13-120-75-75-C-70-iso10646-1
 floating_modifier $mod
 
 ###########
-bindsym XF86MonBrightnessDown exec --no-startup-id backlight down
-bindsym XF86MonBrightnessUp exec --no-startup-id backlight up
-bindsym XF86Launch1 exec i3-input -p 'exec --no-startup-id backlight ' -P 'backlight {up|down|set <val>|get|toggle}: ' > /dev/null
+bindsym XF86MonBrightnessDown exec --no-startup-id ~/.config/utils/backlight.scm -1
+bindsym XF86MonBrightnessUp exec --no-startup-id ~/.config/utils/backlight.scm +1
 bindsym Print exec i3-input -p 'exec scrot ' -P 'Filename: ' > /dev/null
 ###########
 
