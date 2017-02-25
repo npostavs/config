@@ -2,6 +2,8 @@
 	attributesfile = "~/.config/git/attributes"
 	# Drop CRs before committing, probably a good default most of the time.
 	autocrlf = input
+[transfer]
+    fsckObjects = true
 [color]
 	ui = auto
 [user]
@@ -13,21 +15,27 @@
 	ci = commit
 	graph = log --oneline --graph --decorate
 	mkpatch = difftool --no-prompt --extcmd 'diff -u --label old/$BASE --label new/$BASE'
+    debbugs = ! ~/.config/git/extract-bugnum.sh
+    serve = daemon --verbose --export-all --enable=receive-pack --base-path=.git \
+          --reuseaddr --listen=127.0.0.1 --strict-paths .git/
 [push]
-	# A plain 'git push' pushes to @{upstream} if it has the same name
-	# as current (default as of git 2.0).
-	default = simple
+	# A plain 'git push' fails, require a destination.
+	default = nothing
 [rerere]
 	enabled = true
 [merge]
 	conflictstyle = diff3
 	branchdesc = true
+[branch]
+    # Automatically set upstream to start of new branch.
+    autoSetupMerge = always
 [gc]
 	# default is 60 days, but better not to throw out human work too
 	# quickly
 	rerereresolved = 365
 [diff]
 	mnemonicprefix = true
+    submodule = short
 # lisp diff headers should be lines starting with parens
 [diff "lisp"]
 	xfuncname = "^\\(.*$"
