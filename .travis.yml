@@ -1,0 +1,9 @@
+language: generic
+branches:
+  only:
+    - master
+install:
+  - git rev-parse ${TRAVIS_COMMIT_RANGE:=$TRAVIS_BRANCH..FETCH_HEAD}
+script:
+  - source funs.sh
+  - say-something
