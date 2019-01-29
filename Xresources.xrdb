@@ -3,3 +3,7 @@
 Rxvt.intensityStyles: false
 
 dzen2.background: S_base2
+
+! Disable Ctrl+Shift
+! https://wilmer.gaa.st/blog/archives/36-rxvt-unicode-and-ISO-14755-mode.html
+URxvt.iso14755: false

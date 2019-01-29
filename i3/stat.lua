@@ -70,7 +70,7 @@ local function dzen_graph(colour, percent)
    local h = math.floor(H*percent + 0.5)
    if percent > 0 and h < H then h = h + 1 end
    return string.format(
-      '^ib(1)^fg(black)^r(%dx%d)^p(-%d)^fg(%s)^r(%dx%d)^fg()^ib(0)',
+      '^ib(1)^fg(white)^r(%dx%d)^p(-%d)^fg(%s)^r(%dx%d)^fg()^ib(0)',
       W,H,W,
       colour, W, h
       --, math.ceil(H/2 + h/2)

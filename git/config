@@ -10,6 +10,15 @@
 	email = npostavs@users.sourceforge.net
 	name = Noam Postavsky\n
 	signingkey = npostavs
+[sendemail]
+	smtpEncryption = tls
+	smtpServer = smtp.gmail.com
+	smtpUser = npostavs@gmail.com
+	smtpServerPort = 587
+[github]
+    user = npostavs
+[magit]
+    upstream = upstream
 [alias]
 	co = checkout
 	ci = commit
@@ -33,6 +42,8 @@
 	# default is 60 days, but better not to throw out human work too
 	# quickly
 	rerereresolved = 365
+    # Running gc probably not worthwhile, unless developing Linux kernel...
+    auto = 0
 [diff]
 	mnemonicprefix = true
     submodule = short

@@ -144,6 +144,9 @@ bar {
 }
 
 # the workspace bar will cover the status bar
-exec --no-startup-id ~/.config/i3/run-stat-lua.sh | dzen2 -dock
+exec --no-startup-id ~/.config/i3/run-stat-lua.sh | dzen2 -dock -h 18
+
+# Reproduce Bug#24091
+assign [class="Emacs"] 9
 
 for_window [title="^floatme$"] floating enable
