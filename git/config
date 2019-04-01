@@ -19,6 +19,8 @@
     user = npostavs
 [magit]
     upstream = upstream
+[forge]
+    remote = upstream
 [alias]
 	co = checkout
 	ci = commit
