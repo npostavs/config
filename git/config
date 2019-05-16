@@ -4,6 +4,19 @@
 	autocrlf = input
 [transfer]
     fsckObjects = true
+[receive]
+    fsckObjects = true
+[fetch "fsck"]
+    # This error happens in ELPA, and in el-get it seems.  Probably
+    # too common to be worth doing anything about.
+    # Requires git 2.19.0+ to be effective, unfortunately.
+    zeroPaddedFilemode = warn
+[receive "fsck"]
+    # This affects incoming pushes, i.e., never relevant.
+    zeroPaddedFilemode = warn
+[fsck]
+    # f9021702d832a08e0c33396c9dd74a7570fe71d4 = https://github.com/dimitri/el-get/pull/8
+    skipList = "~/.config/git/fsck.skiplist"
 [color]
 	ui = auto
 [user]
