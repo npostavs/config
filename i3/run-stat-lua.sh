@@ -1,3 +1,3 @@
 #!/bin/sh
 
-exec lua ~/.config/i3/stat.lua
+exec lua5.2 ~/.config/i3/stat.lua

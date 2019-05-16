@@ -93,7 +93,9 @@ end
 
 local stat = open_special('/proc/stat')
 local meminfo = open_special('/proc/meminfo')
-local batt_pct = open_special(BATTERY .. 'capacity')
+if BATTERY then
+   local batt_pct = open_special(BATTERY .. 'capacity')
+end
 
 while true do
 
@@ -105,8 +107,10 @@ while true do
    meminfo:seek('set')
    local mstats = memstats(meminfo)
 
-   batt_pct:seek('set')
-   local batt = tonumber(batt_pct:read()) / 100
+   if batt_pct then
+      batt_pct:seek('set')
+      local batt = tonumber(batt_pct:read()) / 100
+   end
 
    -- io.write(string.format('%d%%batt, ', batt *100))
    -- io.write(string.format('%d%%mem, %d%%swap, ',
@@ -119,7 +123,9 @@ while true do
    io.write(dzen_graph('purple', mstats.swap_usage))
    io.write(dzen_graph('green', cpus['0'].usage))
    io.write(dzen_graph('green', cpus['1'].usage))
-   io.write(dzen_graph('orange', batt))
+   if batt then
+      io.write(dzen_graph('orange', batt))
+   end
    io.write(os.date('%a %b %d, %r'))
    io.write('\n')
    io.flush()
