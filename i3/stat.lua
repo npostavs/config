@@ -3,12 +3,24 @@ local ox = require('posix')
 ---- stat gathering functions
 --------------------------------------
 local cpus = {}
+local cpu_count = 0
 
 local function cpu_stats(cpu_line)
    local id, stats = string.match(cpu_line, '^cpu(%d*)%s+(.+)$')
    local idle
    local total = 0
    local col = 1
+
+   if id == nil then
+      return false
+   elseif id == '' then
+      id = 0
+   else
+      id = tonumber(id)
+      if id > cpu_count then
+         cpu_count = id
+      end
+   end
 
    for s in string.gmatch(stats, '(%d+)%s+') do
       local n = tonumber(s)
@@ -27,6 +39,8 @@ local function cpu_stats(cpu_line)
 
    cpus[id].total = total
    cpus[id].idle = idle
+
+   return true
 end
 
 local function memstats(meminfo)
@@ -100,9 +114,9 @@ end
 while true do
 
    stat:seek('set')
-   cpu_stats(stat:read())       -- all cpus
-   cpu_stats(stat:read())       -- cpu0
-   cpu_stats(stat:read())       -- cpu1
+   while cpu_stats(stat:read())
+   do ;
+   end
 
    meminfo:seek('set')
    local mstats = memstats(meminfo)
@@ -112,17 +126,11 @@ while true do
       local batt = tonumber(batt_pct:read()) / 100
    end
 
-   -- io.write(string.format('%d%%batt, ', batt *100))
-   -- io.write(string.format('%d%%mem, %d%%swap, ',
-   --                        mstats.usage *100, mstats.swap_usage *100))
-   -- for id, cpu in pairs(cpus) do
-   --    io.write(string.format('%d%%cpu%s ', cpu.usage *100, id))
-   -- end
-
    io.write(dzen_graph('blue', mstats.usage))
    io.write(dzen_graph('purple', mstats.swap_usage))
-   io.write(dzen_graph('green', cpus['0'].usage))
-   io.write(dzen_graph('green', cpus['1'].usage))
+   for i = 1, cpu_count do
+      io.write(dzen_graph('green', cpus[i].usage))
+   end
    if batt then
       io.write(dzen_graph('orange', batt))
    end
