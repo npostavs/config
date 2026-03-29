@@ -34,17 +34,20 @@ Depends: libacl1-dev, libasound2-dev, libcairo2-dev, libdbus-1-dev,
   imagemagick, imagemagick-7.q16, texinfo
 EOF
 
+# iproute2 for 'ip addr...'; ifupdown needed to get network connection!
+# But possibly can replace with iwd?
 cat <<EOF | mkdeb np-misc-utils 'Generally useful stuff'
 Depends: alsa-utils, aptitude, apt-listchanges, fdisk,
   iputils-ping, traceroute, lsof, nftables, openssh-client,
   wpasupplicant, dhcpcd-base, iw,
   pciutils, usbutils, procps, sudo,
-  xdg-utils,
-  vim-tiny, equivs
+  xdg-utils, unzip,
+  vim-tiny, equivs,
+  iproute2, ifupdown
 EOF
 
 cat <<EOF | mkdeb np-desktop 'My desktop/wm etc'
-Depends: i3, xorg, x-terminal-emulator, dzen2, lua5.2, lua-posix
+Depends: i3, xorg, dmenu, x-terminal-emulator, dzen2, lua5.2, lua-posix
 EOF
 
 # openjdk version 25 in particular needed for audiveris.
@@ -52,6 +55,7 @@ cat <<EOF | mkdeb np-dev 'General dev stuff'
 Depends: autoconf, git, gcc, g++, cmake, ccache, openjdk-25-jdk
 EOF
 
+# llama.cpp needs libssl to download models
 cat <<EOF | mkdeb np-llm 'packages for llm dev'
 Depends: libssl-dev,
   python3-setuptools, python3-wheel, amdgpu-install
