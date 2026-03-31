@@ -2,7 +2,6 @@
 
 # Organize debian packages install into metapackage dependencies.
 cachedir=$HOME/.cache/$(basename $0).d
-updated_packages=0
 mkdeb () {
     pkgname=$1
     pkgdesc=$2
@@ -11,17 +10,19 @@ mkdeb () {
         echo "Description: ${pkgdesc}"
         echo 'Copyright: /dev/null'
         echo 'Section: np-meta'
-        echo "README: ${cachedir}/${pkgname}.equivs"
+        echo "README: ${cachedir}/${pkgname}.equivs.new"
         cat
     } > ${cachedir}/$pkgname.equivs.new
-    if grep -v '^Version:' ${cachedir}/$pkgname.equivs | cmp --quiet - ${cachedir}/$pkgname.equivs.new ;
+    if [ -r ${cachedir}/$pkgname.equivs ] &&
+           { grep -v '^Version:' ${cachedir}/$pkgname.equivs |
+                 cmp --quiet - ${cachedir}/$pkgname.equivs.new
+           } ;
     then
         echo "${pkgname} unchanged"
     else
         echo "Version: $(date +%Y.%m.%d.%H.%M)" >> ${cachedir}/$pkgname.equivs.new
-        equivs-build ${cachedir}/$pkgname.equivs.new &&
-            mv ${cachedir}/$pkgname.equivs.new ${cachedir}/$pkgname.equivs
-        let updated_packages++
+        equivs-build ${cachedir}/$pkgname.equivs.new
+        echo $pkgname >> updated-packages
     fi
 }
 
@@ -72,11 +73,21 @@ Depends: libssl-dev,
   amdgpu-install, rocm
 EOF
 
-if [ $updated_packages -gt 0 ] ; then
+echo '==============='
+
+if [ -s $dir/updated-packages ] ; then
+    echo UPDATED PACKAGES
     ls $dir/*.deb
     chmod o+rx $dir
-    sudo apt --dry-run install $dir/*.deb
+    sudo apt install $dir/*.deb
+    for deb in $dir/*.deb ; do
+        # $dir/<pkgname>_<date-version>_all.deb --> <pkgname>_<date-version> --> <pkgname>
+        pkgname_versioned=$(basename --suffix=_all.deb $deb)
+        pkgname=${pkgname_versioned%%_*}
+        mv ${cachedir}/$pkgname.equivs.new ${cachedir}/$pkgname.equivs
+    done
 else
+    echo NO CHANGES
     cd $origdir
     rmdir $dir
 fi
