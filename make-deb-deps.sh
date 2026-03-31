@@ -1,7 +1,8 @@
 #!/bin/sh
 
 # Organize debian packages install into metapackage dependencies.
-
+cachedir=$HOME/.cache/$(basename $0).d
+updated_packages=0
 mkdeb () {
     pkgname=$1
     pkgdesc=$2
@@ -10,17 +11,26 @@ mkdeb () {
         echo "Description: ${pkgdesc}"
         echo 'Copyright: /dev/null'
         echo 'Section: np-meta'
-        echo "README: ${PWD}/${pkgname}.equivs"
-        echo "Version: $(date +%Y.%m.%d.%H.%M)"
+        echo "README: ${cachedir}/${pkgname}.equivs"
         cat
-    } > $pkgname.equivs
-    equivs-build $pkgname.equivs
+    } > ${cachedir}/$pkgname.equivs.new
+    if grep -v '^Version:' ${cachedir}/$pkgname.equivs | cmp --quiet - ${cachedir}/$pkgname.equivs.new ;
+    then
+        echo "${pkgname} unchanged"
+    else
+        echo "Version: $(date +%Y.%m.%d.%H.%M)" >> ${cachedir}/$pkgname.equivs.new
+        equivs-build ${cachedir}/$pkgname.equivs.new &&
+            mv ${cachedir}/$pkgname.equivs.new ${cachedir}/$pkgname.equivs
+        let updated_packages++
+    fi
 }
 
 # Exit on failure.
 set -e
 
+mkdir -p ${cachedir}
 dir=$(mktemp --directory --tmpdir meta-debs.XXXXXXXX)
+origdir=$PWD
 cd $dir
 
 cat <<EOF | mkdeb np-emacs-build-deps 'Emacs build depends'
@@ -62,6 +72,11 @@ Depends: libssl-dev,
   amdgpu-install, rocm
 EOF
 
-ls $dir/*.deb
-chmod o+rx $dir
-sudo apt install $dir/*.deb
+if [ $updated_packages -gt 0 ] ; then
+    ls $dir/*.deb
+    chmod o+rx $dir
+    sudo apt --dry-run install $dir/*.deb
+else
+    cd $origdir
+    rmdir $dir
+fi
