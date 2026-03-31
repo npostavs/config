@@ -53,12 +53,14 @@ Depends: alsa-utils, aptitude, apt-listchanges, fdisk,
   wpasupplicant, dhcpcd-base, iw,
   pciutils, usbutils, procps, sudo,
   xdg-utils, unzip,
+  ffmpeg,
   vim-tiny, equivs,
   iproute2, ifupdown
 EOF
 
 cat <<EOF | mkdeb np-desktop 'My desktop/wm etc'
-Depends: i3, xorg, dmenu, x-terminal-emulator, dzen2, lua5.2, lua-posix
+Depends: i3, xorg, dmenu, x-terminal-emulator, dzen2, lua5.2, lua-posix,
+  scrot, dunst
 EOF
 
 # openjdk version 25 in particular needed for audiveris.
