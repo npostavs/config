@@ -58,7 +58,8 @@ EOF
 # llama.cpp needs libssl to download models
 cat <<EOF | mkdeb np-llm 'packages for llm dev'
 Depends: libssl-dev,
-  python3-setuptools, python3-wheel, amdgpu-install
+  python3-setuptools, python3-wheel, python3-venv,
+  amdgpu-install, rocm
 EOF
 
 ls $dir/*.deb
