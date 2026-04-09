@@ -79,7 +79,8 @@ dir=$(mktemp --directory --tmpdir meta-debs.XXXXXXXX)
 origdir=$PWD
 cd $dir
 
-args=(Depends 'keyd'
+# NOTE: cannot use evtest (or evemu-record) while keyd is running.
+args=(Depends 'keyd, evemu-tools'
       Postinst 'kbd-conf-update.sh'
       Postrm   'kbd-conf-update.sh')
 cat <<EOF | mkdeb-etc-installer np-kbd 'Keyboard configuration' "${args[@]}"
@@ -122,7 +123,7 @@ EOF
 
 cat <<EOF | mkdeb-deps np-desktop 'My desktop/wm etc'
 Depends: i3, xorg, dmenu, x-terminal-emulator, dzen2, lua5.2, lua-posix,
-  scrot, dunst
+  scrot, dunst, hledger
 EOF
 
 # openjdk version 25 in particular needed for audiveris.
@@ -141,7 +142,7 @@ echo '==============='
 
 if [ -s $dir/updated-packages ] ; then
     echo UPDATED PACKAGES
-    ls $dir/*.deb
+    ls -1 $dir/*.deb
     chmod o+rx $dir
     sudo apt install $dir/*.deb
     for deb in $dir/*.deb ; do
