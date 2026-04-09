@@ -1,0 +1,27 @@
+# lsusb shows `Bus 001 Device 003: ID 0461:4e8e Primax Electronics, Ltd HP USB Keyboard` for the keyboard.
+
+# See evtest output for listing (use EV_MSC value <hex lowercase>).
+# Format rule:
+# KEYBOARD_KEY_<hex lowercase>=<target key>
+
+### To apply new rules:
+# sudo systemd-hwdb update
+# sudo udevadm trigger
+
+evdev:input:b0003v0461p4E8E*
+ KEYBOARD_KEY_c00e2=f1
+ KEYBOARD_KEY_c00ea=f2
+ KEYBOARD_KEY_c00e9=f3
+ KEYBOARD_KEY_c00b6=f4
+ KEYBOARD_KEY_c00cd=f5
+ KEYBOARD_KEY_c00b5=f6
+ KEYBOARD_KEY_c0070=f7
+ KEYBOARD_KEY_c006f=f8
+ KEYBOARD_KEY_7003a=mute
+ KEYBOARD_KEY_7003b=volumedown
+ KEYBOARD_KEY_7003c=volumeup
+ KEYBOARD_KEY_7003d=previoussong
+ KEYBOARD_KEY_7003e=playpause
+ KEYBOARD_KEY_7003f=nextsong
+ KEYBOARD_KEY_70040=brightnessdown
+ KEYBOARD_KEY_70041=brightnessup

@@ -1,8 +1,10 @@
-#!/bin/sh
+#!/bin/bash
 
+VERSION_DATE_FMT='+%Y.%m.%d.%H.%M'
 # Organize debian packages install into metapackage dependencies.
 cachedir=$HOME/.cache/$(basename $0).d
-mkdeb () {
+confdir=$HOME/.config/mydebconf/
+mkdeb-deps () {
     pkgname=$1
     pkgdesc=$2
     {
@@ -20,7 +22,50 @@ mkdeb () {
     then
         echo "${pkgname} unchanged"
     else
-        echo "Version: $(date +%Y.%m.%d.%H.%M)" >> ${cachedir}/$pkgname.equivs.new
+        echo "Version: $(date ${VERSION_DATE_FMT})" >> ${cachedir}/$pkgname.equivs.new
+        equivs-build ${cachedir}/$pkgname.equivs.new
+        echo $pkgname >> updated-packages
+    fi
+}
+
+mkdeb-etc-installer () {
+    pkgname=$1
+    pkgdesc=$2
+    shift 2
+    maxdate=0
+    {
+        echo "Package: ${pkgname}"
+        echo "Description: ${pkgdesc}"
+        echo 'Copyright: /dev/null'
+        echo 'Section: np-etc-installer'
+        echo "README: ${cachedir}/${pkgname}.equivs.new"
+        printf '%s: %s\n' "$@"
+        while [ $# -gt 0 ] ; do
+            case "$1" in
+                (Postinst|Postrm|Preinst|Prerm)
+                    fname=$2
+                    ts=$(stat --format=%Y "${confdir}/${fname}")
+                    if [ $ts -gt $maxdate ] ; then maxdate=$ts ; fi
+                    cp ${confdir}/$fname .
+                    ;;
+            esac
+            shift 2
+        done
+        echo -n 'Files:'
+        while read fname installdir ; do
+            ts=$(stat --format=%Y "${confdir}/${fname}")
+            if [ $ts -gt $maxdate ] ; then maxdate=$ts ; fi
+            cp ${confdir}/$fname .
+            echo " ${fname} ${installdir}"
+        done
+        echo -n "Version: "
+        date --date=@${maxdate} "${VERSION_DATE_FMT}"
+    } > ${cachedir}/$pkgname.equivs.new
+    if [ -r ${cachedir}/$pkgname.equivs ] &&
+           cmp --quiet ${cachedir}/$pkgname.equivs ${cachedir}/$pkgname.equivs.new
+    then
+        echo "${pkgname} unchanged"
+    else
         equivs-build ${cachedir}/$pkgname.equivs.new
         echo $pkgname >> updated-packages
     fi
@@ -34,7 +79,24 @@ dir=$(mktemp --directory --tmpdir meta-debs.XXXXXXXX)
 origdir=$PWD
 cd $dir
 
-cat <<EOF | mkdeb np-emacs-build-deps 'Emacs build depends'
+args=(Depends 'keyd'
+      Postinst 'kbd-conf-update.sh'
+      Postrm   'kbd-conf-update.sh')
+cat <<EOF | mkdeb-etc-installer np-kbd 'Keyboard configuration' "${args[@]}"
+  90-keyboard.hwdb /etc/udev/hwdb.d/
+  keyd.conf /etc/keyd/
+EOF
+
+args=(Depends 'nftables, ifupdown'
+      Preinst  'net-conf-divert.sh'
+      Postinst 'net-conf-update.sh'
+      Postrm   'net-conf-update.sh')
+cat <<EOF | mkdeb-etc-installer np-network 'Network configuration' "${args[@]}"
+  network-interface-share-inet-over-eth.conf /etc/network/interfaces.d
+  nftables.conf /etc/
+EOF
+
+cat <<EOF | mkdeb-deps np-emacs-build-deps 'Emacs build depends'
 Depends: libacl1-dev, libasound2-dev, libcairo2-dev, libdbus-1-dev,
   libgccjit-14-dev, libgif-dev, libgmp-dev, libgnutls28-dev,
   libgpm-dev, libgtk-3-dev, libharfbuzz-dev, libjpeg-dev,
@@ -47,7 +109,7 @@ EOF
 
 # iproute2 for 'ip addr...'; ifupdown needed to get network connection!
 # But possibly can replace with iwd?
-cat <<EOF | mkdeb np-misc-utils 'Generally useful stuff'
+cat <<EOF | mkdeb-deps np-misc-utils 'Generally useful stuff'
 Depends: alsa-utils, aptitude, apt-listchanges, fdisk,
   iputils-ping, traceroute, lsof, nftables, openssh-client,
   wpasupplicant, dhcpcd-base, iw,
@@ -58,18 +120,18 @@ Depends: alsa-utils, aptitude, apt-listchanges, fdisk,
   iproute2, ifupdown
 EOF
 
-cat <<EOF | mkdeb np-desktop 'My desktop/wm etc'
+cat <<EOF | mkdeb-deps np-desktop 'My desktop/wm etc'
 Depends: i3, xorg, dmenu, x-terminal-emulator, dzen2, lua5.2, lua-posix,
   scrot, dunst
 EOF
 
 # openjdk version 25 in particular needed for audiveris.
-cat <<EOF | mkdeb np-dev 'General dev stuff'
+cat <<EOF | mkdeb-deps np-dev 'General dev stuff'
 Depends: autoconf, git, gcc, g++, cmake, ccache, openjdk-25-jdk
 EOF
 
 # llama.cpp needs libssl to download models
-cat <<EOF | mkdeb np-llm 'packages for llm dev'
+cat <<EOF | mkdeb-deps np-llm 'packages for llm dev'
 Depends: libssl-dev,
   python3-setuptools, python3-wheel, python3-venv,
   amdgpu-install, rocm
