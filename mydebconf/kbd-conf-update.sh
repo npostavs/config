@@ -10,5 +10,5 @@ else
     udevadm trigger
 
     echo "kbd-conf [$*]: reloading keyd..."
-    keyd.rvaiya reload
+    systemctl reload-or-restart keyd
 fi

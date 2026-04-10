@@ -25,3 +25,6 @@ evdev:input:b0003v0461p4E8E*
  KEYBOARD_KEY_7003f=nextsong
  KEYBOARD_KEY_70040=brightnessdown
  KEYBOARD_KEY_70041=brightnessup
+ KEYBOARD_KEY_70064=rightctrl
+
+# 70064 is the "102nd" key, with the «»° labels
