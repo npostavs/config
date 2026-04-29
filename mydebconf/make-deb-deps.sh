@@ -88,13 +88,14 @@ cat <<EOF | mkdeb-etc-installer np-kbd 'Keyboard configuration' "${args[@]}"
   keyd.conf /etc/keyd/
 EOF
 
-args=(Depends 'nftables, ifupdown'
+args=(Depends 'nftables, ifupdown, udhcpd'
       Preinst  'net-conf-divert.sh'
       Postinst 'net-conf-update.sh'
       Postrm   'net-conf-update.sh')
 cat <<EOF | mkdeb-etc-installer np-network 'Network configuration' "${args[@]}"
   network-interface-share-inet-over-eth.conf /etc/network/interfaces.d
   nftables.conf /etc/
+  udhcpd.conf /etc/
 EOF
 
 cat <<EOF | mkdeb-deps np-emacs-build-deps 'Emacs build depends'
