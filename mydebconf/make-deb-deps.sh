@@ -136,10 +136,12 @@ Depends: autoconf, git, gcc, g++, cmake, ccache, openjdk-25-jdk
 EOF
 
 # llama.cpp needs libssl to download models
+# libvulkan-dev, glslc, spirv-headers for vulkan build of llama.cpp (not worth it?)
 cat <<EOF | mkdeb-deps np-llm 'packages for llm dev'
 Depends: libssl-dev,
   python3-setuptools, python3-wheel, python3-venv,
-  amdgpu-install, rocm
+  amdgpu-install, rocm,
+  libvulkan-dev, glslc, spirv-headers
 EOF
 
 echo '==============='
