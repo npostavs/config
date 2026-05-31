@@ -111,10 +111,13 @@ EOF
 
 # iproute2 for 'ip addr...'; ifupdown needed to get network connection!
 # But possibly can replace with iwd?
+# firmware-mediatek is REQUIRED for WIFI!! (NOTE: also need
+# non-free-firmware in sources.list!!)
 cat <<EOF | mkdeb-deps np-misc-utils 'Generally useful stuff'
 Depends: alsa-utils, aptitude, apt-listchanges, fdisk,
   iputils-ping, traceroute, lsof, nftables, openssh-client,
   wpasupplicant, dhcpcd-base, iw,
+  firmware-mediatek,
   pciutils, usbutils, procps, sudo,
   xdg-utils, unzip, mupdf-tools,
   ffmpeg,
