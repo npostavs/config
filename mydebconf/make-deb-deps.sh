@@ -98,6 +98,8 @@ cat <<EOF | mkdeb-etc-installer np-network 'Network configuration' "${args[@]}"
   udhcpd.conf /etc/
 EOF
 
+# Apparently install-info isn't strictly a dependency of Emacs, but
+# it's silly to have texinfo without install-info.
 cat <<EOF | mkdeb-deps np-emacs-build-deps 'Emacs build depends'
 Depends: libacl1-dev, libasound2-dev, libcairo2-dev, libdbus-1-dev,
   libgccjit-14-dev, libgif-dev, libgmp-dev, libgnutls28-dev,
@@ -106,7 +108,8 @@ Depends: libacl1-dev, libasound2-dev, libcairo2-dev, libdbus-1-dev,
   libncurses-dev, libotf-dev, libpng-dev, librsvg2-dev, libselinux1-dev,
   libsqlite3-dev, libsystemd-dev, libtiff-dev, libtree-sitter-dev,
   libwebp-dev, libxaw7-dev, libxml2-dev, xaw3dg-dev, zlib1g-dev,
-  imagemagick, imagemagick-7.q16, texinfo
+  imagemagick, imagemagick-7.q16,
+  texinfo, install-info
 EOF
 
 # iproute2 for 'ip addr...'; ifupdown needed to get network connection!
